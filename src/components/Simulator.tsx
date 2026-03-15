@@ -776,7 +776,7 @@ const Simulator: React.FC<SimulatorProps> = ({ onBackToTutorial }) => {
         <div className="flex items-center gap-3">
           <Activity className="text-rose-500 w-8 h-8" />
           <div className="hidden md:block">
-            <h1 className="text-lg font-bold leading-tight">Simulador de Eletrocardiograma</h1>
+            <h1 className="text-lg font-bold leading-tight">Simulador ECG TT</h1>
             <p className="text-xs text-slate-400 font-medium tracking-wide">Um simulador completo</p>
           </div>
         </div>
