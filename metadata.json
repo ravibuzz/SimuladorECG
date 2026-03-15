@@ -1,0 +1,5 @@
+{
+  "name": "ECG Masterclass Simulator",
+  "description": "A comprehensive clinical ECG simulator with 12-lead rendering, axis calculation, and interactive medical cases.",
+  "requestFramePermissions": []
+}
