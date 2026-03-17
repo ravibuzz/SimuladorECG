@@ -291,8 +291,8 @@ export const getClinicalECGValue = (
     }
     if (r === 'sae') { 
         if (['II', 'DII'].includes(lead)) {
-            // Notched P wave (P Mitrale) typical in DII
-            y += bump(pTime, pCenter - 15, 20, 0.15) + bump(pTime, pCenter + 20, 20, 0.15);
+            // Notched P wave (P Mitrale) typical in DII - widened
+            y += bump(pTime, pCenter - 20, 30, 0.15) + bump(pTime, pCenter + 25, 30, 0.15);
             pAmp = 0;
         } else if (['V1'].includes(lead)) {
             // Biphasic P wave in V1 (Morris index)
@@ -503,7 +503,7 @@ export const getClinicalECGValue = (
                 y -= bump(tMs, qCenter + 45, 40, 0.35); // Scooped ST
                 y += bump(tMs, tCenter + 10, 60, 0.15); // Biphasic/flat T
                 if (crossed(qCenter + 45)) ann = "Pá Digitálica";
-            } else if (r === 'stemi_hyper') {
+            } else if (r === 'stemi_hyper' && ['DI', 'II', 'DII', 'aVF'].includes(lead)) {
                 y += bump(tMs, qCenter, qrsW, 1.2);
                 y += gauss(tMs, tCenter - 20, 40, 1.2);
                 if (crossed(tCenter - 20)) ann = "T Hiperaguda";
@@ -516,7 +516,7 @@ export const getClinicalECGValue = (
                 y += bump(tMs, qCenter + 15, 15, 0.4); // Small R
                 y -= gauss(tMs, tCenter, 40, 0.6); // Inverted T
                 if (crossed(qCenter)) ann = "Onda Q Patológica + T Invertida";
-            } else if (r === 'stemi_old' && ['II', 'DII', 'DIII', 'aVF'].includes(lead)) {
+            } else if (r === 'stemi_old' && ['DI', 'II', 'DII', 'aVF'].includes(lead)) {
                 y -= bump(tMs, qCenter, 25, 1.2); // Pathological Q wave
                 y += bump(tMs, qCenter + 15, 15, 0.4); // Small R
                 y += bump(tMs, tCenter, 80, 0.25); // Normal T
@@ -650,16 +650,6 @@ export const getClinicalECGValue = (
                 y -= bump(tMs, qCenter + 30, 20, 0.4); // Upsloping ST depression
                 y += gauss(tMs, tCenter, 35, 1.5); // Tall symmetric T wave
                 if (crossed(qCenter + 30)) ann = "Padrão De Winter";
-            } else if (r === 'stemi_hyper') {
-                y += bump(tMs, qCenter, 15, 1.0);
-                y -= bump(tMs, qCenter + 15, 15, 0.8);
-                y += gauss(tMs, tCenter - 20, 40, 1.2); // Hyperacute T wave
-                if (crossed(tCenter - 20)) ann = "T Hiperaguda";
-            } else if (r === 'stemi_old' && ['V1', 'V2', 'V3', 'V4'].includes(lead)) {
-                y -= bump(tMs, qCenter, 25, 1.2); // Pathological Q wave
-                y += bump(tMs, qCenter + 15, 15, 0.4); // Small R
-                y += bump(tMs, tCenter, 80, 0.25); // Normal T
-                if (crossed(qCenter)) ann = "Onda Q Patológica (IAM Antigo)";
             } else if (r === 'sgarbossa') {
                 y -= bump(tMs, qCenter, 30, 2.0); // Deep QS
                 y += getIschemicComplex(tMs, qCenter, tCenter, 1.5, 'sad', 0, 0, 0); // Excessive discordant STE > 5mm (simulated as 1.5)
@@ -753,14 +743,6 @@ export const getClinicalECGValue = (
             y += bump(tMs, qCenter, 30, 1.5); // Broad R
             y += getIschemicComplex(tMs, qCenter, tCenter, 0.8, 'sad', 0, 0, 0); // Concordant STE
             if (crossed(qCenter + 30)) ann = "STE Concordante";
-        } else if (r === 'stemi_hyper') {
-            y += bump(tMs, qCenter, 15, 1.2);
-            y += gauss(tMs, tCenter - 20, 40, 1.2);
-            if (crossed(tCenter - 20)) ann = "T Hiperaguda";
-        } else if (r === 'stemi_old') {
-            y -= bump(tMs, qCenter - 10, 15, 0.8); // Q wave
-            y += bump(tMs, qCenter + 10, 15, 0.4); // Small R wave
-            y += bump(tMs, tCenter, 80, 0.25); // Normal T
         } else if (r === 'osborn') {
             y += bump(tMs, qCenter, 15, 1.2);
             y += bump(tMs, qCenter + 25, 15, 0.6); // Osborn J-wave
