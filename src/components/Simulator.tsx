@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from
 import { 
   Activity, Play, Pause, RefreshCw, HeartPulse, BookOpen, Sliders, 
   Target, Type, Compass, ArrowRight, ArrowLeft, GraduationCap, 
-  Info, CheckCircle, Download, Clipboard, Heart, Bookmark, Stethoscope, ListChecks, PenTool, Eraser, Maximize2, Minimize2, X
+  Info, CheckCircle, Download, Clipboard, Heart, Bookmark, Stethoscope, ListChecks, PenTool, Eraser, Maximize2, Minimize2, X, RotateCw
 } from 'lucide-react';
 import { RHYTHMS, INFO_CONTENT, getGuidelines, CLINICAL_CASES, DIFFERENTIAL_DIAGNOSIS } from '../constants';
 import { getAxisVectorValue, getClinicalECGValue, getSpike } from '../utils/ecgMath';
@@ -772,98 +772,70 @@ const Simulator: React.FC<SimulatorProps> = ({ onBackToTutorial }) => {
         @keyframes heartPulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
       `}</style>
 
-      <header className="bg-slate-900 text-white p-3 shadow-md flex flex-wrap justify-between items-center z-10 gap-2 shrink-0">
-        <div className="flex items-center gap-3">
-          <Activity className="text-rose-500 w-8 h-8" />
-          <div className="hidden md:block">
-            <h1 className="text-lg font-bold leading-tight">Simulador ECG TT</h1>
-            <p className="text-xs text-slate-400 font-medium tracking-wide">Um simulador completo</p>
+      <header className="bg-slate-900 text-white p-2 sm:p-3 shadow-md flex flex-wrap justify-between items-center z-10 gap-2 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Activity className="text-rose-500 w-6 h-6 sm:w-8 sm:h-8" />
+          <div className="hidden sm:block">
+            <h1 className="text-sm sm:text-lg font-bold leading-tight">Simulador ECG TT</h1>
+            <p className="text-[10px] text-slate-400 font-medium tracking-wide">Um simulador completo</p>
           </div>
         </div>
         
-        <div className="flex gap-2 items-center">
-          <button onClick={onBackToTutorial} className="px-3 py-1.5 rounded-md text-xs font-bold transition-colors bg-slate-800 text-emerald-400 hover:text-emerald-300 flex items-center gap-1 mr-2"><GraduationCap className="w-4 h-4"/> Ver Tutorial Base</button>
-          <div className="w-px bg-slate-700 h-6"></div>
-          <div className="flex items-center gap-1 bg-slate-800 p-1 rounded-lg">
-            <button onClick={() => setMultiLead('1')} disabled={isAxisMode} className={`px-3 py-1.5 rounded-md text-xs font-bold uppercase transition-colors ${multiLead === '1' && !isAxisMode ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'} disabled:opacity-50`}>1 Deriv.</button>
+        <div className="flex gap-1 sm:gap-2 items-center overflow-x-auto no-scrollbar max-w-full">
+          <button onClick={onBackToTutorial} className="px-2 py-1 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold transition-colors bg-slate-800 text-emerald-400 hover:text-emerald-300 flex items-center gap-1 shrink-0"><GraduationCap className="w-3 h-3 sm:w-4 sm:h-4"/> <span className="hidden xs:inline">Tutorial</span></button>
+          <div className="w-px bg-slate-700 h-6 shrink-0"></div>
+          <div className="flex items-center gap-0.5 sm:gap-1 bg-slate-800 p-0.5 sm:p-1 rounded-lg shrink-0">
+            <button onClick={() => setMultiLead('1')} disabled={isAxisMode} className={`px-2 py-1 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold uppercase transition-colors ${multiLead === '1' && !isAxisMode ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'} disabled:opacity-50`}>1</button>
             {multiLead === '1' && !isAxisMode && (
               <select 
                 value={singleLead} 
                 onChange={(e) => setSingleLead(e.target.value)}
-                className="bg-slate-700 text-white text-xs font-bold py-1.5 px-2 rounded-md outline-none border-none cursor-pointer"
+                className="bg-slate-700 text-white text-[10px] sm:text-xs font-bold py-1 sm:py-1.5 px-1 sm:px-2 rounded-md outline-none border-none cursor-pointer"
               >
                 {['DI', 'DII', 'DIII', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6'].map(l => (
                   <option key={l} value={l}>{l.replace('D', '')}</option>
                 ))}
               </select>
             )}
-            <button onClick={() => setMultiLead('3')} disabled={isAxisMode} className={`px-3 py-1.5 rounded-md text-xs font-bold uppercase transition-colors ${multiLead === '3' && !isAxisMode ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'} disabled:opacity-50`}>3 Deriv.</button>
-            <button onClick={() => setMultiLead('12')} disabled={isAxisMode} className={`px-3 py-1.5 rounded-md text-xs font-bold uppercase transition-colors ${multiLead === '12' && !isAxisMode ? 'bg-indigo-600 text-white shadow-[0_0_10px_rgba(79,70,229,0.5)]' : 'text-slate-400 hover:text-white'} disabled:opacity-50`}>12 Deriv.</button>
+            <button onClick={() => setMultiLead('3')} disabled={isAxisMode} className={`px-2 py-1 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold uppercase transition-colors ${multiLead === '3' && !isAxisMode ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'} disabled:opacity-50`}>3</button>
+            <button onClick={() => setMultiLead('12')} disabled={isAxisMode} className={`px-2 py-1 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold uppercase transition-colors ${multiLead === '12' && !isAxisMode ? 'bg-indigo-600 text-white shadow-[0_0_10px_rgba(79,70,229,0.5)]' : 'text-slate-400 hover:text-white'} disabled:opacity-50`}>12</button>
           </div>
-          <div className="w-px bg-slate-700 h-6 hidden sm:block"></div>
-          <button onClick={() => setTheme('monitor')} className={`px-3 py-1.5 rounded-md text-xs font-bold uppercase transition-colors ${theme === 'monitor' ? 'bg-slate-700 text-green-400' : 'bg-slate-800 text-slate-400 hover:text-white'}`}>Monitor</button>
-          <button onClick={() => setTheme('paper')} className={`px-3 py-1.5 rounded-md text-xs font-bold uppercase transition-colors ${theme === 'paper' ? 'bg-white text-rose-600' : 'bg-slate-800 text-slate-400 hover:text-white'}`}>Papel (25mm/s)</button>
+          <div className="w-px bg-slate-700 h-6 hidden sm:block shrink-0"></div>
+          <button onClick={() => setTheme('monitor')} className={`px-2 py-1 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold uppercase transition-colors ${theme === 'monitor' ? 'bg-slate-700 text-green-400' : 'bg-slate-800 text-slate-400 hover:text-white'} shrink-0`}>Monit.</button>
+          <button onClick={() => setTheme('paper')} className={`px-2 py-1 sm:px-3 sm:py-1.5 rounded-md text-[10px] sm:text-xs font-bold uppercase transition-colors ${theme === 'paper' ? 'bg-white text-rose-600' : 'bg-slate-800 text-slate-400 hover:text-white'} shrink-0`}>Papel</button>
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col p-4 gap-4 w-full mx-auto overflow-hidden">
-        <div ref={ecgScreenRef} className={`flex-1 flex flex-col bg-white rounded-2xl shadow-xl border border-slate-200 relative overflow-hidden min-h-[400px] ${isFullscreen ? 'rounded-none border-none h-full w-full' : ''}`}>
-          <div className="px-4 py-2 bg-slate-50 border-b border-slate-200 flex flex-wrap gap-2 justify-between items-center z-10 relative shrink-0">
-             <div className="flex items-center gap-3">
-                <HeartPulse className={`w-5 h-5 ${isPlaying ? 'text-rose-500 animate-pulse' : 'text-slate-400'}`} />
-                <span className="font-bold text-slate-700 text-sm hidden sm:block">{isAxisMode ? 'Sistema Hexaxial de Bailey' : (multiLead === '12' ? 'ECG de 12 Derivações' : 'Monitorização Contínua')}</span>
+      <main className="flex-1 flex flex-col p-2 sm:p-4 gap-2 sm:gap-4 w-full mx-auto overflow-hidden">
+        <div ref={ecgScreenRef} className={`flex-1 flex flex-col bg-white rounded-xl sm:rounded-2xl shadow-xl border border-slate-200 relative overflow-hidden min-h-[250px] sm:min-h-[400px] ${isFullscreen ? 'rounded-none border-none h-full w-full' : ''}`}>
+          <div className="px-2 py-1.5 sm:px-4 sm:py-2 bg-slate-50 border-b border-slate-200 flex flex-wrap gap-1.5 sm:gap-2 justify-between items-center z-10 relative shrink-0">
+             <div className="flex items-center gap-2 sm:gap-3">
+                <HeartPulse className={`w-4 h-4 sm:w-5 sm:h-5 ${isPlaying ? 'text-rose-500 animate-pulse' : 'text-slate-400'}`} />
+                <span className="font-bold text-slate-700 text-[10px] sm:text-sm hidden xs:block">{isAxisMode ? 'Sistema Hexaxial' : (multiLead === '12' ? 'ECG 12 Deriv.' : 'Monitorização')}</span>
              </div>
-             <div className="flex gap-2 items-center">
-                <button onClick={() => setShowAnnotations(!showAnnotations)} disabled={isPlaying} title={isPlaying ? 'Pause o ecrã para ativar as setas didáticas' : 'Mostrar marcações'} className={`flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-lg border transition-all ${isPlaying ? 'opacity-50 cursor-not-allowed bg-slate-100 text-slate-400' : (showAnnotations ? 'bg-yellow-100 text-yellow-800 border-yellow-300' : 'bg-white text-slate-600 border-slate-200')}`}><Type className="w-4 h-4" /> {isPlaying ? 'Pausar p/ Setas' : 'Marcações'}</button>
-                <div className="w-px bg-slate-200 mx-1"></div>
+             <div className="flex gap-1 sm:gap-2 items-center">
+                <button onClick={() => setShowAnnotations(!showAnnotations)} disabled={isPlaying} title={isPlaying ? 'Pause o ecrã para ativar as setas didáticas' : 'Mostrar marcações'} className={`flex items-center gap-1 sm:gap-2 px-2 py-1 sm:px-3 sm:py-1.5 text-[10px] sm:text-xs font-bold rounded-lg border transition-all ${isPlaying ? 'opacity-50 cursor-not-allowed bg-slate-100 text-slate-400' : (showAnnotations ? 'bg-yellow-100 text-yellow-800 border-yellow-300' : 'bg-white text-slate-600 border-slate-200')}`}><Type className="w-3 h-3 sm:w-4 sm:h-4" /> <span className="hidden sm:inline">{isPlaying ? 'Pausar p/ Setas' : 'Marcações'}</span><span className="sm:hidden">Setas</span></button>
+                <div className="w-px bg-slate-200 mx-0.5 sm:mx-1"></div>
                 {isDrawingMode && (
-                  <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg mr-2">
-                    <button onClick={() => setDrawTool('pen')} className={`px-2 py-1 text-xs font-bold rounded ${drawTool === 'pen' ? 'bg-white shadow text-blue-600' : 'text-slate-500'}`}>Caneta</button>
-                    <button onClick={() => setDrawTool('arrow')} className={`px-2 py-1 text-xs font-bold rounded ${drawTool === 'arrow' ? 'bg-white shadow text-blue-600' : 'text-slate-500'}`}>Seta</button>
-                    <button onClick={() => setDrawTool('text')} className={`px-2 py-1 text-xs font-bold rounded ${drawTool === 'text' ? 'bg-white shadow text-blue-600' : 'text-slate-500'}`}>Texto</button>
+                  <div className="flex items-center gap-0.5 sm:gap-1 bg-slate-100 p-0.5 sm:p-1 rounded-lg mr-1 sm:mr-2">
+                    <button onClick={() => setDrawTool('pen')} className={`px-1.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs font-bold rounded ${drawTool === 'pen' ? 'bg-white shadow text-blue-600' : 'text-slate-500'}`}>Caneta</button>
+                    <button onClick={() => setDrawTool('arrow')} className={`px-1.5 py-0.5 sm:px-2 sm:py-1 text-[10px] sm:text-xs font-bold rounded ${drawTool === 'arrow' ? 'bg-white shadow text-blue-600' : 'text-slate-500'}`}>Seta</button>
                   </div>
                 )}
                 <button 
                   onClick={() => {
                     setIsDrawingMode(!isDrawingMode);
                   }} 
-                  className={`flex items-center gap-1 p-1.5 px-3 border rounded-lg text-xs font-bold transition-colors ${isDrawingMode ? 'bg-yellow-50 text-yellow-600 border-yellow-200' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'}`}
+                  className={`flex items-center gap-1 p-1 sm:p-1.5 px-2 sm:px-3 border rounded-lg text-[10px] sm:text-xs font-bold transition-colors ${isDrawingMode ? 'bg-yellow-50 text-yellow-600 border-yellow-200' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'}`}
                   title="Modo Desenho"
                 >
-                  <PenTool className="w-4 h-4" /> Anotar
+                  <PenTool className="w-3 h-3 sm:w-4 sm:h-4" /> <span className="hidden sm:inline">Anotar</span>
                 </button>
-                {drawingPathsRef.current.length > 0 && (
-                  <button onClick={() => drawingPathsRef.current = []} title="Limpar Anotações" className="p-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-100">
-                    <Eraser className="w-4 h-4" />
-                  </button>
-                )}
-                <button onClick={() => setIsPlaying(!isPlaying)} className={`flex items-center gap-1 p-1.5 px-3 border rounded-lg text-xs font-bold transition-colors ${!isPlaying ? 'bg-red-50 text-red-600 border-red-200' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'}`}>
-                   {isPlaying ? <React.Fragment><Pause className="w-4 h-4" /> Pausar</React.Fragment> : <React.Fragment><Play className="w-4 h-4" /> Retomar</React.Fragment>}
+                <button onClick={() => setIsPlaying(!isPlaying)} className={`flex items-center gap-1 p-1 sm:p-1.5 px-2 sm:px-3 border rounded-lg text-[10px] sm:text-xs font-bold transition-colors ${!isPlaying ? 'bg-red-50 text-red-600 border-red-200' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'}`}>
+                   {isPlaying ? <Pause className="w-3 h-3 sm:w-4 sm:h-4" /> : <Play className="w-3 h-3 sm:w-4 sm:h-4" />}
+                   <span className="hidden sm:inline">{isPlaying ? 'Pausar' : 'Retomar'}</span>
                 </button>
-                {rhythm === 'asystole' && (
-                  <button 
-                    disabled
-                    className="flex items-center gap-1 p-1.5 px-3 bg-slate-300 text-slate-500 rounded-lg text-xs font-bold shadow-sm cursor-not-allowed"
-                    title="Ritmo Não Chocável"
-                  >
-                    ⚡ Não Chocável
-                  </button>
-                )}
-                {(rhythm === 'vtach_mono' || rhythm === 'vfib') && (
-                  <button 
-                    onClick={() => {
-                      setShockFlash(true);
-                      setTimeout(() => setShockFlash(false), 200);
-                      handleRhythmChange('nsr');
-                    }} 
-                    className="flex items-center gap-1 p-1.5 px-3 bg-red-500 text-white rounded-lg text-xs font-bold hover:bg-red-600 transition-colors shadow-sm"
-                    title="Dar Choque (Desfibrilação)"
-                  >
-                    ⚡ Choque
-                  </button>
-                )}
-                <button onClick={() => clearScreen(true)} title="Limpar Ecrã" className="p-1.5 bg-white border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-100"><RefreshCw className="w-4 h-4" /></button>
-                <button onClick={handleDownloadECG} title="Exportar PNG (Alta Qualidade)" className="p-1.5 bg-indigo-50 border border-indigo-200 rounded-lg text-indigo-600 hover:bg-indigo-100"><Download className="w-4 h-4" /></button>
+                <button onClick={handleDownloadECG} title="Exportar PNG" className="p-1 sm:p-1.5 bg-indigo-50 border border-indigo-200 rounded-lg text-indigo-600 hover:bg-indigo-100"><Download className="w-3 h-3 sm:w-4 sm:h-4" /></button>
              </div>
           </div>
           
@@ -933,26 +905,34 @@ const Simulator: React.FC<SimulatorProps> = ({ onBackToTutorial }) => {
 
             <button 
               onClick={toggleFullscreen}
-              className="absolute top-4 right-4 z-20 p-2 bg-slate-800/50 hover:bg-slate-700/80 text-white rounded-lg backdrop-blur transition-colors"
+              className="absolute top-2 right-2 sm:top-4 sm:right-4 z-20 p-1.5 sm:p-2 bg-slate-800/50 hover:bg-slate-700/80 text-white rounded-lg backdrop-blur transition-colors"
               title={isFullscreen ? "Sair da Tela Cheia" : "Tela Cheia"}
             >
-              {isFullscreen ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
+              {isFullscreen ? <Minimize2 className="w-4 h-4 sm:w-5 sm:h-5" /> : <Maximize2 className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
+
+            {/* Sugestão de Paisagem para Mobile */}
+            <div className="absolute bottom-2 right-2 z-20 sm:hidden">
+              <div className="bg-slate-800/60 backdrop-blur-sm text-white p-1.5 rounded-lg flex items-center gap-2 border border-white/10">
+                <RotateCw className="w-3 h-3 animate-spin-slow" />
+                <span className="text-[9px] font-medium">Deite o celular</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="w-full h-[350px] bg-white rounded-2xl shadow-xl border border-slate-200 flex flex-col overflow-hidden shrink-0">
+        <div className="w-full h-[300px] sm:h-[400px] bg-white rounded-xl sm:rounded-2xl shadow-xl border border-slate-200 flex flex-col overflow-hidden shrink-0">
           
-          <div className="grid grid-cols-4 gap-1 p-1.5 border-b border-slate-200 bg-slate-100 shrink-0">
-            <button onClick={() => {setActiveTab('controls'); setQuizActive(false); setAxisQuizActive(false); clearScreen();}} className={`py-2 text-[10px] font-bold rounded-lg uppercase tracking-wider transition-all ${activeTab === 'controls' && !quizActive ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><Sliders className="w-4 h-4 mx-auto mb-1" /> Ritmos</button>
-            <button onClick={() => {setActiveTab('info'); setQuizActive(false); setAxisQuizActive(false); clearScreen();}} className={`py-2 text-[10px] font-bold rounded-lg uppercase tracking-wider transition-all ${activeTab === 'info' && !quizActive ? 'bg-white text-rose-600 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><BookOpen className="w-4 h-4 mx-auto mb-1" /> Aula</button>
-            <button onClick={() => {setActiveTab('guidelines'); setQuizActive(false); setAxisQuizActive(false); clearScreen();}} className={`py-2 text-[10px] font-bold rounded-lg uppercase tracking-wider transition-all ${activeTab === 'guidelines' && !quizActive ? 'bg-white text-violet-600 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><Stethoscope className="w-4 h-4 mx-auto mb-1" /> Conduta</button>
-            <button onClick={() => {setActiveTab('diff_diag'); setQuizActive(false); setAxisQuizActive(false); clearScreen();}} className={`py-2 text-[10px] font-bold rounded-lg uppercase tracking-wider transition-all ${activeTab === 'diff_diag' && !quizActive ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><ListChecks className="w-4 h-4 mx-auto mb-1" /> Diferencial</button>
+          <div className="grid grid-cols-4 sm:grid-cols-8 gap-0.5 sm:gap-1 p-1 sm:p-1.5 border-b border-slate-200 bg-slate-100 shrink-0">
+            <button onClick={() => {setActiveTab('controls'); setQuizActive(false); setAxisQuizActive(false); clearScreen();}} className={`py-1.5 sm:py-2 text-[8px] sm:text-[10px] font-bold rounded-lg uppercase tracking-wider transition-all ${activeTab === 'controls' && !quizActive ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><Sliders className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 sm:mb-1" /> Ritmos</button>
+            <button onClick={() => {setActiveTab('info'); setQuizActive(false); setAxisQuizActive(false); clearScreen();}} className={`py-1.5 sm:py-2 text-[8px] sm:text-[10px] font-bold rounded-lg uppercase tracking-wider transition-all ${activeTab === 'info' && !quizActive ? 'bg-white text-rose-600 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><BookOpen className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 sm:mb-1" /> Aula</button>
+            <button onClick={() => {setActiveTab('guidelines'); setQuizActive(false); setAxisQuizActive(false); clearScreen();}} className={`py-1.5 sm:py-2 text-[8px] sm:text-[10px] font-bold rounded-lg uppercase tracking-wider transition-all ${activeTab === 'guidelines' && !quizActive ? 'bg-white text-violet-600 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><Stethoscope className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 sm:mb-1" /> Conduta</button>
+            <button onClick={() => {setActiveTab('diff_diag'); setQuizActive(false); setAxisQuizActive(false); clearScreen();}} className={`py-1.5 sm:py-2 text-[8px] sm:text-[10px] font-bold rounded-lg uppercase tracking-wider transition-all ${activeTab === 'diff_diag' && !quizActive ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><ListChecks className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 sm:mb-1" /> Diferencial</button>
             
-            <button onClick={() => {setActiveTab('axis'); setQuizActive(false); clearScreen();}} className={`py-2 text-[10px] font-bold rounded-lg uppercase tracking-wider transition-all ${activeTab === 'axis' && !quizActive ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><Compass className="w-4 h-4 mx-auto mb-1" /> Eixo</button>
-            <button onClick={() => {setActiveTab('cases'); setQuizActive(false); setAxisQuizActive(false);}} className={`py-2 text-[10px] font-bold rounded-lg uppercase tracking-wider transition-all ${activeTab === 'cases' && !quizActive ? 'bg-red-50 text-red-600 border border-red-200 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><Heart className="w-4 h-4 mx-auto mb-1" /> Casos</button>
-            <button onClick={() => {setActiveTab('quiz'); startQuiz(); setAxisQuizActive(false);}} className={`py-2 text-[10px] font-bold rounded-lg uppercase tracking-wider transition-all ${(quizActive && activeTab === 'quiz') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><Target className="w-4 h-4 mx-auto mb-1" /> Quiz</button>
-            <button onClick={onBackToTutorial} className="py-2 text-[10px] font-bold rounded-lg uppercase tracking-wider text-slate-500 hover:bg-slate-200"><GraduationCap className="w-4 h-4 mx-auto mb-1" /> Tutorial</button>
+            <button onClick={() => {setActiveTab('axis'); setQuizActive(false); clearScreen();}} className={`py-1.5 sm:py-2 text-[8px] sm:text-[10px] font-bold rounded-lg uppercase tracking-wider transition-all ${activeTab === 'axis' && !quizActive ? 'bg-white text-slate-700 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><Compass className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 sm:mb-1" /> Eixo</button>
+            <button onClick={() => {setActiveTab('cases'); setQuizActive(false); setAxisQuizActive(false);}} className={`py-1.5 sm:py-2 text-[8px] sm:text-[10px] font-bold rounded-lg uppercase tracking-wider transition-all ${activeTab === 'cases' && !quizActive ? 'bg-red-50 text-red-600 border border-red-200 shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><Heart className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 sm:mb-1" /> Casos</button>
+            <button onClick={() => {setActiveTab('quiz'); startQuiz(); setAxisQuizActive(false);}} className={`py-1.5 sm:py-2 text-[8px] sm:text-[10px] font-bold rounded-lg uppercase tracking-wider transition-all ${(quizActive && activeTab === 'quiz') ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-200'}`}><Target className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 sm:mb-1" /> Quiz</button>
+            <button onClick={onBackToTutorial} className="py-1.5 sm:py-2 text-[8px] sm:text-[10px] font-bold rounded-lg uppercase tracking-wider text-slate-500 hover:bg-slate-200"><GraduationCap className="w-3 h-3 sm:w-4 sm:h-4 mx-auto mb-0.5 sm:mb-1" /> Tutorial</button>
           </div>
 
           <div className="flex-1 p-4 overflow-y-auto custom-scroll relative bg-slate-50">

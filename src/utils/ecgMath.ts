@@ -198,7 +198,7 @@ export const getClinicalECGValue = (
 
   // 4. LÓGICA DE ONDA P
   let pCenter = 100 * scale;
-  const qCenter = 250 * scale;
+  let qCenter = 250 * scale;
   let drawQRS = true;
   let drawP = !isPVC && !['afib', 'aflutter', 'svt', 'avnrt', 'junctional', 'pm_ventricular', 'vtach_mono', 'vfib', 'vflutter', 'asystole', 'aivr', 'torsades'].includes(r);
 
@@ -242,8 +242,10 @@ export const getClinicalECGValue = (
 
   let pTime = tMs;
 
-  if (r === 'bav1') pCenter = -60 * scale; // Even wider PR for better visibility (> 300ms)
-  else if (r === 'bav2m1') {
+  if (r === 'bav1') {
+    pCenter = 60 * scale;
+    qCenter = 360 * scale; // Prolonged PR interval (~300ms)
+  } else if (r === 'bav2m1') {
     pCenter = (100 - ((beatIndex % 4) * 45)) * scale;
     if (beatIndex % 4 === 3) drawQRS = false;
   } else if (r === 'bav2m2') {
@@ -253,8 +255,11 @@ export const getClinicalECGValue = (
   } else if (r === 'bav_avancado') {
     if (beatIndex % 3 !== 0) drawQRS = false;
   } else if (r === 'bav3') {
-    pTime = absTimeMs % 750;
-    pCenter = 375; // BAV3 is independent of current beat
+    // BAV3: Atrial rhythm is independent and usually faster than ventricular escape
+    // Using a non-round period (approx 97 bpm) to ensure it "drifts" and looks dissociated
+    const atrialPeriod = 615; 
+    pTime = absTimeMs % atrialPeriod;
+    pCenter = atrialPeriod / 2; 
     drawP = true;
   } else if (r === 'pac') pCenter = 120 * scale;
   else if (r === 'wpw') pCenter = 170 * scale;
