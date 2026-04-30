@@ -1,5 +1,5 @@
 {
-  "name": "Simulador ECG TT",
+  "name": "Simulador ECG TeT",
   "description": "A comprehensive clinical ECG simulator with 12-lead rendering, axis calculation, and interactive medical cases.",
   "requestFramePermissions": []
 }
